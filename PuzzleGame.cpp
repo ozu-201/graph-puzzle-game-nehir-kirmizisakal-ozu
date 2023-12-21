@@ -12,10 +12,15 @@ int main(){
     PuzzleGame puzzleGame;
 
     std::vector<std::string> words = puzzleGame.readFromFile();
+    std::vector<std::string> filteredWords = puzzleGame.filteredWords(words,5);
 
-    list::Graph graphWith3Letters = puzzleGame.createGraphWithLetterNumber(words, 3);
-//    list::Graph graphWith4Letters = puzzleGame.createGraphWithLetterNumber(words, 4);
-//    list::Graph graphWith5Letters = puzzleGame.createGraphWithLetterNumber(words, 5);
+
+    list::Graph graph = puzzleGame.createGraph(filteredWords);
+
+    graph.breadthFirstSearch(filteredWords, "sappy", "moody");
+
+
+//    list::Graph graphWith5Letters = puzzleGame.createGraph(words, 5);
 
 
     return 0;
@@ -24,7 +29,7 @@ int main(){
 std::vector<std::string> PuzzleGame::readFromFile (){
     std::vector<std::string> words;
 
-    std::ifstream file ("C:\\Users\\TEMP\\CLionProjects\\graph-puzzle-game-nehir-kirmizisakal-ozu\\data");
+    std::ifstream file ("C:\\Users\\TEMP\\CLionProjects\\graph-puzzle-game-nehir-kirmizisakal-ozu\\english-dictionary.txt");
 
     std::string word;
 
@@ -45,15 +50,21 @@ std::vector<std::string> PuzzleGame::readFromFile (){
     return words;
 }
 
-list::Graph PuzzleGame::createGraphWithLetterNumber (std::vector<std::string>& words, int letterNumber ){
+std::vector<std::string> PuzzleGame::filteredWords (std::vector<std::string> words, int length ){
     std::vector<std::string> filteredWords;
 
     for( const std::string& word: words){
-        if(word.length() == static_cast<size_t>(letterNumber)){
+        if(word.length() == static_cast<size_t>(length)){
             filteredWords.push_back(word);
         }
 
     }
+    return filteredWords;
+}
+
+
+
+list::Graph PuzzleGame::createGraph (std::vector<std::string>& filteredWords){
 
     list::Graph graph (filteredWords.size());
 
@@ -61,7 +72,8 @@ list::Graph PuzzleGame::createGraphWithLetterNumber (std::vector<std::string>& w
         for(size_t j = i + 1; j < filteredWords.size() ; j++){
             if(isConnected(filteredWords[i], filteredWords[j])){
                 graph.addEdge(i,j);
-                std::cout <<"edge added.";
+                graph.addEdge(j,i);
+
             }
 
         }
@@ -71,21 +83,17 @@ list::Graph PuzzleGame::createGraphWithLetterNumber (std::vector<std::string>& w
 }
 
 bool PuzzleGame::isConnected (std::string& word1, std::string& word2){
-    int sameLetterCount = 0;
+    int differentLetterCount = 0;
 
     for(int i = 0; i < word1.length(); i++){
-        if(word1[i]== word2[i]){
-            sameLetterCount ++;
+        if(word1[i]!= word2[i]){
+            differentLetterCount ++;
         }
 
-        if(sameLetterCount > 0){
+        if(differentLetterCount > 1){
             return false;
         }
     }
 
-    if(sameLetterCount == 0){
-        return false;
-    }
-
-    return true;
+    return differentLetterCount == 1;
 }

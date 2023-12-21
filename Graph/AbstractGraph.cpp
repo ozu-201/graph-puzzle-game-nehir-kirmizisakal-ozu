@@ -34,19 +34,19 @@ int AbstractGraph::connectedComponentDfs() {
     return component;
 }
 
-int AbstractGraph::connectedComponentBfs() {
-    int component = 0;
-    bool* visited = new bool[vertexCount];
-    for (int vertex = 0; vertex < vertexCount; vertex++){
-        if (!visited[vertex]){
-            visited[vertex] = true;
-            breadthFirstSearch(visited, vertex);
-            component++;
-        }
-    }
-    delete[] visited;
-    return component;
-}
+//int AbstractGraph::connectedComponentBfs() {
+//    int component = 0;
+//    bool* visited = new bool[vertexCount];
+//    for (int vertex = 0; vertex < vertexCount; vertex++){
+//        if (!visited[vertex]){
+//            visited[vertex] = true;
+//            breadthFirstSearch(visited, vertex);
+//            component++;
+//        }
+//    }
+//    delete[] visited;
+//    return component;
+//}
 
 void AbstractGraph::kruskal() {
     int edgeCount = 0, i, count;

@@ -2,6 +2,8 @@
 // Created by Olcay Taner YILDIZ on 8.05.2023.
 //
 
+#include <vector>
+#include <iostream>
 #include "Graph.h"
 #include "DisjointSet/DisjointSet.h"
 #include "Queue/Queue.h"
@@ -60,23 +62,60 @@ namespace list {
         }
     }
 
-    void Graph::breadthFirstSearch(bool *visited, int startNode) {
+    void Graph::breadthFirstSearch(std::vector<std::string> filteredWords, std::string startWord, std::string endWord) {
+
+        std::vector<bool> visited (filteredWords.size(), false);
+        std::vector<int> parent (filteredWords.size(), -1);
+        std::vector<std::string> orderedPath;
         Edge* edge;
         int fromNode, toNode;
         Queue queue = Queue();
-        queue.enqueue(new Node(startNode));
+
+        int startingPosition;
+
+        for(startingPosition = 0; startingPosition < filteredWords.size(); startingPosition++){
+            if(filteredWords[startingPosition] == startWord){
+                break;
+            }
+        }
+        queue.enqueue(new Node(startingPosition));
+        visited[startingPosition] = true;
+
         while (!queue.isEmpty()){
             fromNode = queue.dequeue()->getData();
             edge = edges[fromNode].getHead();
+
             while (edge != nullptr) {
                 toNode = edge->getTo();
                 if (!visited[toNode]){
                     visited[toNode] = true;
                     queue.enqueue(new Node(toNode));
+                    parent[toNode] = fromNode;
+
+                    if(filteredWords[toNode] == endWord){
+                        std::cout <<"Path from " << startWord << " to " << endWord << ": " << std::endl;
+                        int current = toNode;
+                        while(current != -1){
+                            orderedPath.push_back(filteredWords[current]);
+                            current = parent[current];
+
+                        }
+
+                        for(int i = orderedPath.size() -1; i >= 0; i--){
+                            std::cout << orderedPath[i] << std::endl;
+                        }
+
+                        return;
+                    }
                 }
                 edge = edge->getNext();
             }
         }
+
+        if(orderedPath.size() == 0 || orderedPath.size() == 1){
+            std::cout << "No path." << std::endl;
+        }
+
     }
 
     Path *Graph::bellmanFord(int source) {

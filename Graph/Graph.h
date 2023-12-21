@@ -6,6 +6,7 @@
 #define DATASTRUCTURES_CPP_GRAPH_H
 
 
+#include <string>
 #include "EdgeList.h"
 #include "Graph/AbstractGraph.h"
 
@@ -23,9 +24,8 @@ namespace list {
         Path* bellmanFord(int source);
         Path* dijkstra(int source);
         void prim();
-    protected:
         void depthFirstSearch(bool* visited, int fromNode) override;
-        void breadthFirstSearch(bool* visited, int startNode) override;
+        void breadthFirstSearch(std::vector<std::string> filteredWords,std::string starWord, std::string endWord) override;
         Edge* edgeList(int& edgeCount) override;
     };
 
