@@ -40,7 +40,7 @@ int AbstractGraph::connectedComponentDfs() {
 //    for (int vertex = 0; vertex < vertexCount; vertex++){
 //        if (!visited[vertex]){
 //            visited[vertex] = true;
-//            breadthFirstSearch(visited, vertex);
+//            BFS(visited, vertex);
 //            component++;
 //        }
 //    }

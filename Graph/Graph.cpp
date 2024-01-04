@@ -32,6 +32,68 @@ namespace list {
         delete[] edges;
     }
 
+    void Graph::addWord(std::string word) {
+        filteredWords.push_back(word);
+    }
+
+
+    void Graph::addEdge(std::string from, std::string to) {
+        for(int i = 0; i < filteredWords.size(); i++){
+            for(int j = 0; j < filteredWords.size(); j++){
+                if(filteredWords[i] == from && filteredWords[j] == to && isConnected(filteredWords[i], filteredWords[j])){
+                    addEdge(i,j);
+                    addEdge(j,i);
+                }
+            }
+        }
+    }
+
+
+    void Graph::addWords (std::vector<std::string> words, int length ){
+
+        for( const std::string& word: words){
+            if(word.length() == static_cast<size_t>(length)){
+                filteredWords.push_back(word);
+            }
+
+        }
+    }
+
+
+
+    void Graph::addEdges (){
+
+        for(size_t i = 0 ; i < filteredWords.size() ; i++){
+            for(size_t j = i + 1; j < filteredWords.size() ; j++){
+                if(isConnected(filteredWords[i], filteredWords[j])){
+                    addEdge(i,j);
+                    addEdge(j,i);
+
+                }
+
+            }
+        }
+    }
+
+    bool Graph::isConnected (std::string& word1, std::string& word2){
+        int differentLetterCount = 0;
+
+        for(int i = 0; i < word1.length(); i++){
+            if(word1[i]!= word2[i]){
+                differentLetterCount ++;
+            }
+
+            if(differentLetterCount > 1){
+                return false;
+            }
+        }
+
+        return differentLetterCount == 1;
+    }
+
+
+
+
     void Graph::connectedComponentsDisjointSet() {
         Edge* edge;
         int toNode;
@@ -62,7 +124,7 @@ namespace list {
         }
     }
 
-    void Graph::breadthFirstSearch(std::vector<std::string> filteredWords, std::string startWord, std::string endWord) {
+    void Graph::BFS(std::string startWord, std::string endWord) {
 
         std::vector<bool> visited (filteredWords.size(), false);
         std::vector<int> parent (filteredWords.size(), -1);
@@ -93,7 +155,6 @@ namespace list {
                     parent[toNode] = fromNode;
 
                     if(filteredWords[toNode] == endWord){
-                        std::cout <<"Path from " << startWord << " to " << endWord << ": " << std::endl;
                         int current = toNode;
                         while(current != -1){
                             orderedPath.push_back(filteredWords[current]);
@@ -138,7 +199,21 @@ namespace list {
         return shortestPaths;
     }
 
-    Path *Graph::dijkstra(int source) {
+    void Graph::Dijkstra(std::string start, std::string end){
+        Path *paths = dijkstra(start);
+
+    }
+
+    Path *Graph::dijkstra(std::string start) {
+        int source;
+
+        for(int i = 0;i < filteredWords.size() ; i++){
+            if(filteredWords[i] == start){
+                source = i;
+                break;
+            }
+        }
+
         Edge* edge;
         Path* shortestPaths = initializePaths(source);
         MinHeap heap = MinHeap(vertexCount);
@@ -163,6 +238,7 @@ namespace list {
         }
         return shortestPaths;
     }
+
 
     Edge *Graph::edgeList(int& edgeCount) {
         Edge* list;

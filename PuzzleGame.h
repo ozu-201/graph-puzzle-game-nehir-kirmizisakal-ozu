@@ -17,10 +17,6 @@ class PuzzleGame{
 
 public:
     std::vector<std::string> readFromFile ();
-    std::vector<std::string> filteredWords (std::vector<std::string> words, int length );
-    list::Graph createGraph (std::vector<std::string>& filteredWords);
-    bool isConnected (std::string& word1, std::string& word2);
-
 
 };
 
